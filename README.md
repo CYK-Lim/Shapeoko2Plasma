@@ -4,7 +4,6 @@ Shapeoko 2
 	Z Axis Upgrade w/ NEMA 23
 	Handle/Knob
 
-
 Probotix
 	RF Isolated CNC Breakout Board
 	4x SideStep Bi-Polar Stepper Motor Driver
@@ -48,4 +47,3 @@ Mechanical additions
 	Frame (1”x3” .125” thick mild steel tubing)
 	Slats (1” .125” thick mild steel flats)
 	Water basin (24 gauge mild steel sheet)
-
