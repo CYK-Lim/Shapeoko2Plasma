@@ -1,0 +1,473 @@
+--************************************************
+--*** Set these values up to suit your machine ***
+--************************************************
+
+--this is the distance between each torch reference in MILLIMETRES
+refDistance = 250
+
+--this is the reference feed rate in mm/min
+refFeed = 500
+
+--Put your switch offset value here in MILLIMETRES
+switchOffset = 1.5
+
+--Scriber X,Y,Z offsets in MILLIMETRES. Do not use inches here even if you want inch code
+--For the marker use the scriber Z as the offset from Z zero you want the Z to move to during a scribe.
+--Change these values to suit your scriber setup
+scriberX = 50.8
+scriberY = 50.8
+scriberZ = 36.4
+
+--scriber axis. Leave this as nil if the scriber is fixed to the same axis as the torch
+--scriberAxis = "A"
+scriberAxis = nil
+
+--If this value is set to true then use G28 (home) for the Z reference
+--Set it to false for G31 probe
+refHome = true
+
+--this value when set to "true" will set the Z to lift to rapid height between paths when using the marker tool.  
+--if false it will not lift the Z between paths but will at the end
+markerZ = true
+
+--The cutter will slow down for corners and turn off THC below this radius
+--Set slowRadius to "0" to turn off the auto slowdown
+slowRadius = 0
+
+--Minimum slow down speed.
+--This is a scale factor. For instance 0.5 = 50% of the current feed rate
+slowPercent = 0.6
+
+--THC on and off codes. Use nil if you don't want THC control e.g:
+-- thcOnCode = nil
+-- thcOffCode = nil
+
+--these codes are for the DCC extensions and turn the DTHC on/off if you have DTHC REV1/4 or higher firmware
+thcOnCode = " M62 P0"
+thcOffCode = " M65 P0"
+
+--************************************************
+--***           End of settings                ***
+--************************************************
+
+function OnAbout(event)
+   ctrl = event:GetTextCtrl()
+   ctrl:AppendText("For LinuxCNC running Hypertherm Powermax with RS485 on \n")
+   ctrl:AppendText("Shapeoko 2 with Seeeduino/Mesa THC.\n")
+   ctrl:AppendText("\n")
+   ctrl:AppendText("Comments enclosed with ( and )\n")
+   ctrl:AppendText("M64/M65 P1 turn the torch on/off\n")
+   ctrl:AppendText("\n")
+   ctrl:AppendText("Post variables:\n")
+   ctrl:AppendText("refDistance - set the distance between each reference\n")
+   ctrl:AppendText("refFeed - set the feed rate when referencing\n")
+   ctrl:AppendText("switchOffset - set your net switch offset amount \n")
+   ctrl:AppendText("Scriber uses any tool number\n")
+   ctrl:AppendText("slowRadius - slow down below this radius\n")
+   ctrl:AppendText("slowPercent - minimum percentage to slow down\n")
+   ctrl:AppendText("markerZ- allows marker rapid travel at system rapid height or Z offset height\n")
+end
+
+
+
+post.DefineVariable("refDistance",sc.unitLINEAR,0,1e17)
+post.DefineVariable("refFeed",sc.unitFEED,0,1e17)
+post.DefineVariable("switchOffset",sc.unitLINEAR,-1e17,1e17)
+post.DefineVariable("slowRadius",sc.unitLINEAR,-1e17,1e17)
+post.DefineVariable("slowPercent",sc.unitPERCENT,-1e17,1e17)
+post.DefineCustomToolParam("PlasmaTool", "Preset current", "presetAmps", sc.unit0DECPLACE, 40, 0, 200)
+post.DefineCustomToolParam("PlasmaTool", "Preset Air Pressure", "presetPSI", sc.unit0DECPLACE, 85, 0, 200)
+post.DefineCustomToolParam("PlasmaTool", "Preset volts", "presetVolts", sc.unit0DECPLACE, 49, 0, 200)
+post.DefineCustomToolParam("PlasmaTool", "DTHC delay -sec", "dthcDelay", sc.unit1DECPLACE, 0, 0, 99)
+post.DefineCustomToolParam("PlasmaTool", "Tip Size -Amps", "tipSize", sc.unit0DECPLACE, 25, 45, 200)
+post.DefineCustomToolParam("PlasmaTool", "NO DTHC - 0", "dthcOff", sc.unit0DECPLACE, 1, 0, 1)
+
+
+
+
+function OnInit()
+
+   offX = 0
+   offY = 0
+   offZ = 0
+
+   post.SetCommentChars ("()", "[]")  --make sure ( and ) characters do not appear in system text
+   post.Text (" ( Filename: ", fileName, " )\n")
+   post.Text (" ( Post processor: ", postName, " )\n")
+   post.Text (" ( Date: ", date, ")\n")
+   if(scale == metric) then
+      post.Text (" G21 ( Units: Metric )\n") --metric mode
+   else
+      post.Text (" G20 ( Units: Imperial )\n") --inch mode
+   end
+   post.Text (" F1\n G53 G90 G40\n")
+   
+-- check all of the DCC variables to make sure there are no nulls   
+
+
+   if(presetVolts) then 
+      --don't do anything   
+   else
+     presetVolts = 0 --don't pass a null
+   end
+
+   if(dthcDelay) then 
+      --don't do anything   
+   else
+      dthcDelay = 0 --don't pass a null
+   end
+
+   if(tipSize) then 
+      --don't do anything   
+   else
+      tipSize = 25 --don't pass a null
+   end
+
+   if(presetAmps) then 
+      --don't do anything   
+   else
+      presetAmps = 0 --don't pass a null
+   end
+
+   if(presetPSI) then 
+      --don't do anything   
+   else
+      presetPSI = 0 --don't pass a null
+   end
+
+
+   
+   minArcSize = 0.2 --arcs smaller than this are converted to moves
+   firstRef = true
+   currentZAxis = "Z"
+   finalCut = false
+   dist = 9999999
+   lastz = 0
+   thcstate = 1
+   post.Text (" M65 P1")
+   post.Text(" (ARC is off)\n");
+   ThcOff()
+   
+end
+
+--function OnNewLine()
+--   post.Text ("N")
+--   post.Number (lineNumber, "0000")
+--   lineNumber = lineNumber + 10
+--end
+
+
+function OnFinish()
+   finalCut = true
+   endZ = safeZ
+   OnRapid()
+   endX = 0
+   endY = 0
+   offX = 0
+   offY = 0
+   offZ = 0
+   OnRapid()
+   --post.Text(" S900 \n")
+   --post.Text(" M22 \n")
+   post.Text(thcOffCode)
+   post.Text(" (THC is off)\n"); 
+   --post.Text(" M22 \n")
+   post.Text (" M65 P1 M30")
+   post.Text(" (ARC is off)\n");
+end
+
+function OnRapid()
+   if(endX < 1e17 and endY < 1e17) then --don't update the distance moved if X or Y are unknown
+      local len = math.hypot((endX + offX)-currentX , (endY + offY)-currentY)
+      dist = dist + len
+   end
+
+   post.ModalText (" G00")
+   post.ModalNumber (" X", (endX + offX) * scale, "0.0000")
+   post.ModalNumber (" Y", (endY + offY) * scale, "0.0000")
+   post.ModalNumber (" Z", endZ * scale, "0.0000")
+   post.Eol()
+
+ end
+ 
+
+
+function OnMove()
+
+   local len = math.hypot(endX - currentX , endY - currentY)
+   dist = dist + len
+
+   if(len > slowRadius) then
+     ThcOn()
+   end
+
+   post.ModalText (" G01")
+   post.ModalNumber (" X", (endX + offX) * scale, "0.0000")
+   post.ModalNumber (" Y", (endY + offY) * scale, "0.0000")
+
+   if(toolClass ~= "MarkerTool") then
+      post.ModalNumber (" Z", endZ * scale, "0.0000")
+   end
+
+   post.ModalNumber (" F", feedRate * scale, "0.0###")
+   post.Eol()
+
+end
+
+function OnArc()
+   local radius = math.hypot(currentX - arcCentreX, currentY - arcCentreY)
+   dist = dist + radius * math.abs(arcAngle)
+
+   if(radius < slowRadius) and (math.abs(arcAngle) > 0.5) then
+      feed = (radius / slowRadius)
+
+      if(feed < slowPercent) then
+         feed = slowPercent
+      end
+
+      feed = feed * feedRate
+      ThcOff()
+   else
+      feed = feedRate
+      ThcOn()
+   end
+
+   if(arcAngle <0) then
+      post.ModalText (" G03")
+   else
+      post.ModalText (" G02")
+   end
+   post.ModalNumber (" X", (endX + offX) * scale, "0.0000")
+   post.ModalNumber (" Y", (endY + offY) * scale, "0.0000")
+   post.Text (" I")
+   post.Number ((arcCentreX - currentX) * scale, "0.0000")
+   post.Text (" J")
+   post.Number ((arcCentreY - currentY) * scale, "0.0000")
+   post.ModalNumber (" F", feed * scale, "0.0###")
+   post.Eol()
+end
+
+
+function ThcOff()
+   if(not thcOffCode) then return end
+   if(thcstate ==1) then
+      thcstate = 0
+      post.Text(thcOffCode)
+      post.Text(" (THC is off)\n");
+   end
+end
+
+function ThcOn()
+   if(not thcOnCode) then return end
+   if(toolClass == "MarkerTool")  then return end
+   
+   if(thcstate == 0 and currentZ == cutHeight) then
+      thcstate = 1
+      post.Text(thcOnCode)
+      post.Text(" (THC is on)\n");
+      return
+   end
+   
+   if(thcstate == 2) then
+      thcstate = 0
+   end
+end
+
+function OnPenDown()
+
+   --if(dist >= refDistance) then
+   --   dist = 0
+   --   Reference();
+   --end
+   
+   --post.ModalText (" G00")
+   --post.NonModalNumber(" Z", pierceHeight  * scale, "0.0000")
+   --post.Eol()
+   
+   --if (preheat > 0) then
+   --   post.Text ("\n G04 P")
+   --   post.Number (preheat,"0.###")
+   --   post.Eol()
+   --end
+   
+   post.Text ("\n M64 P1")
+   post.Text(" (ARC is on)\n");
+
+--CONSIDER ADDING M66 (WAIT FOR ARC OK)
+
+   
+   if (pierceDelay > 0) then
+      post.Text (" G04 P")
+      post.Number (pierceDelay,"0.###")
+      post.Eol()
+   end
+   
+  thcstate = 0 
+  --ThcOn()
+  --post.Text (" M22 \n")
+  
+end
+
+
+function Reference()
+   firstRef = false
+   
+   if (refHome) then
+      post.ModalText(" G28.1 Z")
+      post.Number(3 * scale, "0.00")
+   else
+      post.ModalText(" G31 Z -100")
+   end
+   
+   post.ModalNumber (" F", refFeed * scale, "0.0###")
+   post.Eol()
+   post.ModalText(" G92 Z0.0\n")
+   post.ModalText (" G00")
+   post.Text(" Z")
+   post.Number (switchOffset * scale, "0.0000")
+   post.Eol()
+   post.ModalText(" G92 Z0.0\n")
+   
+end
+
+function OnPenUp()
+
+      post.Text(thcOffCode)
+      post.Text(" (THC is off)\n");
+
+      post.Text (" M65 P1")
+      post.Text(" (ARC is off)\n");
+      
+   if (endDelay > 0) then
+      post.Text (" G04 P")
+      post.Number (endDelay,"0.###")
+      post.Eol()
+   end
+   
+end
+
+function OnNewOperation()
+   post.Text (" ( Operation: ", operationName, " )\n")
+   
+   if (plungeRate <= 0) then
+      post.Warning("WARNING: Plunge rate is zero")
+   end
+   
+   if (feedRate <= 0) then
+      post.Warning("WARNING: Feed rate is zero")
+   end
+   
+end
+
+
+function OnNewPart()
+   post.Text(" ( Part: ",partName," )\n");
+end
+
+function OnToolChange()
+	post.Text (" ( Tool number: ", tool ," ")
+	post.Text(" Feedrate: ", feedRate * scale , " ) \n")
+	
+	if(dthcOff == 0) then
+		post.Text (" ( DTHC has been disabled in this tool)\n")
+	end
+	
+	if(presetVolts >0) then
+		post.Text ( " ( Preset Volts: ",presetVolts," " )
+	else
+		post.Text ("(")
+	end
+	
+	if(presetAmps >0) then
+		post.Text ( " Preset AMPS: " ,presetAmps," ) ")
+		post.Eol()
+	else
+		post .Text (")")
+		post.Eol()
+	end
+	
+	if(presetPSI>0) then
+		post.Text ( " ( Air Pressure Preset: " ,presetPSI," ) ")
+		post.Eol()
+	end
+	
+	if(tipSize>0) then
+		post.Text ( " ( Suggested Tip Size: " ,tipSize," ")
+	else
+		post.Text ( "(")
+	end
+	
+	if(dthcDelay >= 0 ) then
+		post.Text ( "  THC Delay: " , dthcDelay," sec ) ")
+		post.Eol()
+	else
+		post.Text ( ", Default DTHC Delay )")
+		post.Eol()
+	end
+
+
+	if(scriberAxis and scriberAxis == currentZAxis) then
+		endZ = safeZ
+		OnRapid()
+		currentZAxis = "Z"
+	end
+	
+	--if(dthcOff == 0) then
+	--	post.Text (" S999 \n")
+	--	post.Text ("  M22 \n")
+	--else
+	--	post.Text (" S900 \n")
+	--	post.Text ("  M22 \n")
+	--end 
+	
+	--if(presetVolts > 0) then
+	post.Text ( " M100 P" ,presetVolts, " Q")
+	post.Number (dthcDelay * 10, "00")
+	post.Eol()
+	--post.Text ("  M22 ")
+	--post.Eol()
+	--else 
+	--post.Text ( "(No Preset Volts)\n" )
+	--end 
+	
+	--if(presetAmps > 0) then 
+	post.Text( " M101 P" ,presetAmps, " Q" ,presetPSI, "\n")
+
+	--post.Text ("  M22 ")
+	--post.Eol()
+	--end
+	
+	--if(presetPSI > 0) then
+	--	post.Text( " S8 " ,presetPSI, "\n")
+	--	--post.Text ("  M22 ")
+	--	post.Eol()
+	--else 
+	--	post.Text("(Default Air Pressure)") 
+	--	post.Eol()		 
+	--end
+	
+	--if(dthcDelay > 0 ) then
+	--	post.Text ( " S5")
+	--	post.Number (dthcDelay * 10, "00")
+	--	post.Eol()
+	--	--post.Text ("  M22 \n")
+	--end
+	
+	offX = 0
+	offY = 0
+	offZ = 0
+	post.Text (" M00\n")
+	post.Text (" (Check the settings, then press CYCLE START to continue)\n")
+
+end --end for toolchangefunction
+
+
+function OnDrill()
+   OnRapid()
+   OnPenDown()
+   endZ = drillZ
+   OnMove()
+   OnPenUp()
+   endZ = safeZ
+   OnRapid()
+end
