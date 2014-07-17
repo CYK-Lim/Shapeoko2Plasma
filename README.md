@@ -19,6 +19,7 @@ Hypertherm
 	CNC Interface
 
 PC
+	Intel i5
 	Ubuntu 12.04
 	RTAI 3.2 Kernel
 	LinuxCNC 2.6
@@ -44,6 +45,6 @@ Custom Software
 	Modbus ASCII controls and HMI (pyModbus and pyvcp) 
 
 Mechanical additions
-	Frame (1”x3” .125” thick mild steel tubing)
+	Frame (1”x3” .125” thick mild steel tubing, slots cut with 1/8" wide chop saw blade)
 	Slats (1” .125” thick mild steel flats)
-	Water basin (24 gauge mild steel sheet)
+	Water basin (24 gauge mild steel sheet bent/welded/coated with Rubberizeit)
