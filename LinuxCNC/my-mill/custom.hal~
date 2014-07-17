@@ -1,0 +1,26 @@
+# Include your customized HAL commands here
+# This file will not be overwritten when you run stepconf again
+#newsig VoltageSP s32
+#sets VoltageSP 1
+#loadusr -W mb2hal config=md2hal_config.ini
+loadusr -Wn powermax ./powermaxSerial.py
+
+newsig CurrentSP float
+#sets CurrentSP 0.0
+
+net FloatSwitch <= parport.0.pin-13-in           # => or2.1.in1 and2.4.in0 and2.5.in1 and2.6.in1
+net ArcOK motion.digital-in-00 <= parport.0.pin-10-in-not             # => or2.4.in1 xor2.1.in1 oneshot.2.in
+net TurnTorchOn <= motion.digital-out-01          # => xor2.0.in0 and2.8.in0
+net TurnTorchOn => parport.0.pin-01-out          #  0neshot.1.in not.2.in
+net THCOn <= motion.digital-out-00
+net THCOn => parport.0.pin-17-out
+
+
+
+
+
+# net TorchAndFloat and2.6.out => flipflop.0.set
+# net FloatSwitchSet flipflop.0.out => or2.3.in1 and2.7.in1
+
+
+

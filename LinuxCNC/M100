@@ -1,0 +1,5 @@
+#!/bin/bash
+voltage=$1
+halcmd sets VoltageSP $voltage
+exit 0
+

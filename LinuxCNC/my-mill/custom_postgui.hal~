@@ -1,0 +1,52 @@
+# Include your customized HAL commands here
+# The commands in this file are run after the AXIS GUI (including PyVCP panel) starts
+
+
+
+#sets spindle-at-speed true
+net FloatSwitch => pyvcp.Led-FloatSwitch
+
+net ArcOK => pyvcp.Led-ArcOK
+
+net TurnTorchOn => pyvcp.Led-TorchOn
+net THCOn => pyvcp.Led-THCOn
+
+net VoltageSP => pyvcp.Int-VoltageSP
+
+net AirPresSP => pyvcp.Int-AirPresSP powermax.presSP
+
+net CurrentSP => pyvcp.Int-CurrentSP powermax.currSP
+
+net MachineON halui.machine.is-on => powermax.machON
+
+net MinCurrSP <= powermax.minCurr pyvcp.Int-MinCurrSP
+#net MinCurrSP =>
+net MaxCurrSP <= powermax.maxCurr pyvcp.Int-MaxCurrSP
+#net MaxCurrSP =>
+
+net MinPresSP <= powermax.minPres pyvcp.Int-MinPresSP
+#net MinPresSP =>
+net MaxPresSP <= powermax.maxPres pyvcp.Int-MaxPresSP
+#net MaxPresSP => 
+
+net PlasRunTime <= powermax.runTime pyvcp.Int-RunTime
+#net PlasRunTime =>
+
+net PlasFltCode <= powermax.fltCode pyvcp.FaultCode
+#net PlasFltCode =>
+
+net CurrentACT <= powermax.currFB pyvcp.CurrentACT
+#net CurrentACT =>
+
+net PressureACT <= powermax.presFB pyvcp.PressureACT
+#net PressureACT =>
+
+net NorLED <= powermax.modeNorFB pyvcp.led.0
+net CpaLED powermax.modeCpaFB pyvcp.led.1  
+net GouLED powermax.modeGouFB pyvcp.led.2
+
+net modeNormalSP <= pyvcp.modeNorSP powermax.modeNorSP
+net modeGougeSP <= pyvcp.modeGouSP powermax.modeGouSP
+net modeCPASP <= pyvcp.modeCpaSP powermax.modeCpaSP
+
+

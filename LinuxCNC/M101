@@ -1,0 +1,6 @@
+#!/bin/bash
+current=$1
+pressur=$2
+halcmd sets CurrentSP $current
+halcmd sets AirPresSP $pressur
+exit 0

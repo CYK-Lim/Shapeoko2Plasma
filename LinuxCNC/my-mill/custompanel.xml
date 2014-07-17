@@ -1,0 +1,392 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<pyvcp>
+	<table>
+	<tablesticky sticky="nsew"/>
+		<tablerow/>
+		<tablespan columns="5"/>
+			<label>
+				<text>" "</text>
+				<font>("Arial",12)</font>
+			</label>
+		<tablerow/>
+		<tablespan columns="5"/>
+			<label>
+				<text>"---- THC Status ----"</text>
+				<font>("Arial",14)</font>
+			</label>
+		
+		<tablerow/>
+			<label>
+				<text>" "</text>
+				<font>("Arial",12)</font>
+			</label>
+			<table>
+				<tablerow/>
+					<label>
+						<text>"             Float Switch "</text>
+						<font>("Arial",12)</font>
+					</label> 
+					<led> 
+						<halpin>"Led-FloatSwitch"</halpin>  
+						<on_color>"red"</on_color> 
+						<off_color>"green"</off_color> 
+					</led>
+				<tablerow/>
+					<label>
+						<text>"Torch On "</text>
+						<font>("Arial",12)</font>
+					</label>
+					<led> 
+						<halpin>"Led-TorchOn"</halpin>   
+						<on_color>"green"</on_color> 
+						<off_color>"red"</off_color> 
+					</led>
+				<tablerow/>
+					<label>
+						<text>"Arc OK "</text>
+						<font>("Arial",12)</font>
+					</label>
+					<led> 
+						<halpin>"Led-ArcOK"</halpin>   
+						<on_color>"green"</on_color> 
+						<off_color>"red"</off_color> 
+					</led>
+				<tablerow/>
+					<label>
+						<text>"THC On "</text>
+						<font>("Arial",12)</font>
+					</label>
+					<led> 
+						<halpin>"Led-THCOn"</halpin>  
+						<on_color>"green"</on_color> 
+						<off_color>"red"</off_color> 
+					</led>
+			</table>				
+					
+		<tablerow/>			
+		<tablespan columns="5"/>
+			<label>
+				<text>" "</text>
+				<font>("Arial",12)</font>
+			</label>
+		<tablerow/>
+		<tablespan columns="5"/>
+		<tablesticky sticky="nsew"/>
+			<label>
+				<text>"---- Configuration Status ----"</text>
+				<font>("Arial",14)</font>
+			</label>
+		<tablerow/>
+			<label>
+				<text>" "</text>
+				<font>("Arial",12)</font>
+			</label>
+			<label>
+				<wraplength>"150"</wraplength>
+				<justify>"center"</justify>
+				<text>"Voltage SP "</text>
+				<font>("Arial",12)</font>
+			</label>
+			<number>
+				<halpin>"Int-VoltageSP"</halpin>
+				<font>("Arial",12)</font>
+				<format>"3d"</format>
+				<width>4</width>
+			</number>
+			<label>
+				<wraplength>"150"</wraplength>
+				<justify>"center"</justify>
+				<text>"volts"</text>
+				<font>("Arial",12)</font>
+			</label>
+			<label>
+				<text>"  "</text>
+				<font>("Arial",12)</font>
+			</label>
+		<tablerow/>
+			<label>
+				<text>" "</text>
+				<font>("Arial",12)</font>
+			</label>
+			<label>
+				<wraplength>"150"</wraplength>
+				<justify>"center"</justify>
+				<text>"Current SP "</text>
+				<font>("Arial",12)</font>
+			</label>
+			<number>
+				<halpin>"Int-CurrentSP"</halpin>
+				<font>("Arial",12)</font>
+				<format>"3.0f"</format>
+				<width>4</width>
+			</number>
+			<label>
+				<wraplength>"150"</wraplength>
+				<justify>"center"</justify>
+				<text>"amps"</text>
+				<font>("Arial",12)</font>
+			</label>
+		<tablerow/>
+			<label>
+				<text>" "</text>
+				<font>("Arial",12)</font>
+			</label>
+			<label>
+				<wraplength>"150"</wraplength>
+				<justify>"center"</justify>
+				<text>"Current ACT "</text>
+				<font>("Arial",12)</font>
+			</label>
+			<number>
+				<halpin>"CurrentACT"</halpin>
+				<font>("Arial",12)</font>
+				<format>"3.0f"</format>
+				<width>4</width>
+			</number>
+			<label>
+				<wraplength>"150"</wraplength>
+				<justify>"center"</justify>
+				<text>"amps"</text>
+				<font>("Arial",12)</font>
+			</label>
+		<tablerow/>
+			<label>
+				<text>" "</text>
+				<font>("Arial",12)</font>
+			</label>
+			<label>
+				<text>"Air Press SP "</text>
+				<font>("Arial",12)</font>
+			</label>
+			<number>
+				<halpin>"Int-AirPresSP"</halpin>
+				<font>("Arial",12)</font>
+				<format>"3.0f"</format>
+				<width>4</width>
+			</number>
+			<label>
+				<wraplength>"150"</wraplength>
+				<justify>"center"</justify>
+				<text>"psi"</text>
+				<font>("Arial",12)</font>
+			</label>
+		<tablerow/>
+			<label>
+				<text>" "</text>
+				<font>("Arial",12)</font>
+			</label>
+			<label>
+				<text>"Air Press ACT "</text>
+				<font>("Arial",12)</font>
+			</label>
+			<number>
+				<halpin>"PressureACT"</halpin>
+				<font>("Arial",12)</font>
+				<format>"3.0f"</format>
+				<width>4</width>
+			</number>
+			<label>
+				<wraplength>"150"</wraplength>
+				<justify>"center"</justify>
+				<text>"psi"</text>
+				<font>("Arial",12)</font>
+			</label>
+		<tablerow/>
+			<label>
+				<text>" "</text>
+				<font>("Arial",12)</font>
+			</label>
+			<label>
+				<text>"Minimum Current SP "</text>
+				<font>("Arial",12)</font>
+			</label>
+			<number>
+				<halpin>"Int-MinCurrSP"</halpin>
+				<font>("Arial",12)</font>
+				<format>"3.0f"</format>
+				<width>4</width>
+			</number>
+			<label>
+				<wraplength>"150"</wraplength>
+				<justify>"center"</justify>
+				<text>"amps"</text>
+				<font>("Arial",12)</font>
+			</label>
+		<tablerow/>
+			<label>
+				<text>" "</text>
+				<font>("Arial",12)</font>
+			</label>
+			<label>
+				<text>"Maximum Current SP "</text>
+				<font>("Arial",12)</font>
+			</label>
+			<number>
+				<halpin>"Int-MaxCurrSP"</halpin>
+				<font>("Arial",12)</font>
+				<format>"3.0f"</format>
+				<width>4</width>
+			</number>
+			<label>
+				<wraplength>"150"</wraplength>
+				<justify>"center"</justify>
+				<text>"amps"</text>
+				<font>("Arial",12)</font>
+			</label>
+		<tablerow/>
+			<label>
+				<text>" "</text>
+				<font>("Arial",12)</font>
+			</label>
+			<label>
+				<text>"Minimum Pressure SP "</text>
+				<font>("Arial",12)</font>
+			</label>
+			<number>
+				<halpin>"Int-MinPresSP"</halpin>
+				<font>("Arial",12)</font>
+				<format>"3.0f"</format>
+				<width>4</width>
+			</number>
+			<label>
+				<wraplength>"150"</wraplength>
+				<justify>"center"</justify>
+				<text>"psi"</text>
+				<font>("Arial",12)</font>
+			</label>
+		<tablerow/>
+			<label>
+				<text>" "</text>
+				<font>("Arial",12)</font>
+			</label>
+			<label>
+				<text>"Maximum Pressure SP "</text>
+				<font>("Arial",12)</font>
+			</label>
+			<number>
+				<halpin>"Int-MaxPresSP"</halpin>
+				<font>("Arial",12)</font>
+				<format>"3.0f"</format>
+				<width>4</width>
+			</number>
+			<label>
+				<wraplength>"150"</wraplength>
+				<justify>"center"</justify>
+				<text>"psi"</text>
+				<font>("Arial",12)</font>
+			</label>
+		<tablerow/>
+			<label>
+				<text>" "</text>
+				<font>("Arial",12)</font>
+			</label>
+			<label>
+				<text>"Total Runtime "</text>
+				<font>("Arial",12)</font>
+			</label>
+			<number>
+				<halpin>"Int-RunTime"</halpin>
+				<font>("Arial",12)</font>
+				<format>"4d"</format>
+				<width>4</width>
+			</number>
+			<label>
+				<wraplength>"150"</wraplength>
+				<justify>"center"</justify>
+				<text>"secs"</text>
+				<font>("Arial",12)</font>
+			</label>
+		<tablerow/>
+			<label>
+				<text>" "</text>
+				<font>("Arial",12)</font>
+			</label>
+			<label>
+				<text>"Fault Code "</text>
+				<font>("Arial",12)</font>
+			</label>
+			<number>
+				<halpin>"FaultCode"</halpin>
+				<font>("Arial",12)</font>
+				<format>"4d"</format>
+				<width>4</width>
+			</number>
+			
+	<!-- </table> 
+	<table flexible_rows="[2]">	-->
+		<tablerow/>
+		<tablespan columns="5"/>
+			<label>
+				<text>" "</text>
+				<font>("Arial",12)</font>
+			</label>
+			<!-- <button halpin="testbutton"/> -->
+		<tablerow/>
+		<tablespan columns="5"/>
+		<tablesticky sticky="nsew"/>
+			<label>
+				<text>"---- Plasma Mode Selection ----"</text>
+				<font>("Arial",14)</font>
+			</label>
+		<tablerow/>
+			<label>
+				<text>" "</text>
+				<font>("Arial",12)</font>
+			</label>
+		<tablespan columns="4"/>
+		<tablesticky sticky="nsew"/>
+
+			<table>
+			<tablesticky sticky="nse"/>
+				<tablerow/>
+					<label>
+						<text>"                 Normal "</text>
+						<font>("Arial",12)</font>
+					</label>
+					<led>
+						<size>28</size>
+					</led>
+					<label>
+						<text>" "</text>
+						<font>("Arial",12)</font>
+					</label>
+					<button>
+						<text>"Select"</text>
+						<halpin>"modeNorSP"</halpin>
+					</button>
+				<tablerow/>
+					<label>
+						<text>"CPA "</text>
+						<font>("Arial",12)</font>
+					</label>
+					<led>
+						<size>28</size>
+					</led>
+					<label>
+						<text>" "</text>
+						<font>("Arial",12)</font>
+					</label>
+					<button>
+						<text>"Select"</text>
+						<halpin>"modeCpaSP"</halpin>
+					</button>
+				<tablerow/>
+					<label>
+						<text>"Gouge "</text>
+						<font>("Arial",12)</font>
+					</label>
+					<led>
+						<size>28</size>
+					</led>
+					<label>
+						<text>" "</text>
+						<font>("Arial",12)</font>
+					</label>
+					<button>
+						<text>"Select"</text>
+						<halpin>"modeGouSP"</halpin>
+					</button>
+			</table>
+	</table>
+
+</pyvcp>
