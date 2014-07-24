@@ -8,27 +8,9 @@ refDistance = 250
 --this is the reference feed rate in mm/min
 refFeed = 500
 
---Put your switch offset value here in MILLIMETRES
-switchOffset = 1.5
-
---Scriber X,Y,Z offsets in MILLIMETRES. Do not use inches here even if you want inch code
---For the marker use the scriber Z as the offset from Z zero you want the Z to move to during a scribe.
---Change these values to suit your scriber setup
-scriberX = 50.8
-scriberY = 50.8
-scriberZ = 36.4
-
---scriber axis. Leave this as nil if the scriber is fixed to the same axis as the torch
---scriberAxis = "A"
-scriberAxis = nil
-
 --If this value is set to true then use G28 (home) for the Z reference
 --Set it to false for G31 probe
 refHome = true
-
---this value when set to "true" will set the Z to lift to rapid height between paths when using the marker tool.  
---if false it will not lift the Z between paths but will at the end
-markerZ = true
 
 --The cutter will slow down for corners and turn off THC below this radius
 --Set slowRadius to "0" to turn off the auto slowdown
@@ -61,18 +43,14 @@ function OnAbout(event)
    ctrl:AppendText("Post variables:\n")
    ctrl:AppendText("refDistance - set the distance between each reference\n")
    ctrl:AppendText("refFeed - set the feed rate when referencing\n")
-   ctrl:AppendText("switchOffset - set your net switch offset amount \n")
-   ctrl:AppendText("Scriber uses any tool number\n")
    ctrl:AppendText("slowRadius - slow down below this radius\n")
    ctrl:AppendText("slowPercent - minimum percentage to slow down\n")
-   ctrl:AppendText("markerZ- allows marker rapid travel at system rapid height or Z offset height\n")
 end
 
 
 
 post.DefineVariable("refDistance",sc.unitLINEAR,0,1e17)
 post.DefineVariable("refFeed",sc.unitFEED,0,1e17)
-post.DefineVariable("switchOffset",sc.unitLINEAR,-1e17,1e17)
 post.DefineVariable("slowRadius",sc.unitLINEAR,-1e17,1e17)
 post.DefineVariable("slowPercent",sc.unitPERCENT,-1e17,1e17)
 post.DefineCustomToolParam("PlasmaTool", "Preset current", "presetAmps", sc.unit0DECPLACE, 40, 0, 200)
@@ -100,7 +78,7 @@ function OnInit()
    else
       post.Text (" G20 ( Units: Imperial )\n") --inch mode
    end
-   post.Text (" F1\n G53 G90 G40\n")
+   post.Text (" F1\n G00 G53 G90 G40\n")
    
 -- check all of the DCC variables to make sure there are no nulls   
 
@@ -145,17 +123,10 @@ function OnInit()
    lastz = 0
    thcstate = 1
    post.Text (" M65 P1")
-   post.Text(" (ARC is off)\n");
+   post.Text(" (ARC is off)\n")
    ThcOff()
    
 end
-
---function OnNewLine()
---   post.Text ("N")
---   post.Number (lineNumber, "0000")
---   lineNumber = lineNumber + 10
---end
-
 
 function OnFinish()
    finalCut = true
@@ -170,10 +141,12 @@ function OnFinish()
    --post.Text(" S900 \n")
    --post.Text(" M22 \n")
    post.Text(thcOffCode)
-   post.Text(" (THC is off)\n"); 
+   post.Text(" ( THC is off )\n")
    --post.Text(" M22 \n")
-   post.Text (" M65 P1 M30")
-   post.Text(" (ARC is off)\n");
+   post.Text (" M65 P1 ")
+   post.Text(" ( ARC is off )\n")
+   post.Text (" M30")
+   --post.Text(" G00 X0 Y0\n")
 end
 
 function OnRapid()
@@ -204,11 +177,7 @@ function OnMove()
    post.ModalText (" G01")
    post.ModalNumber (" X", (endX + offX) * scale, "0.0000")
    post.ModalNumber (" Y", (endY + offY) * scale, "0.0000")
-
-   if(toolClass ~= "MarkerTool") then
-      post.ModalNumber (" Z", endZ * scale, "0.0000")
-   end
-
+   post.ModalNumber (" Z", endZ * scale, "0.0000")
    post.ModalNumber (" F", feedRate * scale, "0.0###")
    post.Eol()
 
@@ -253,18 +222,17 @@ function ThcOff()
    if(thcstate ==1) then
       thcstate = 0
       post.Text(thcOffCode)
-      post.Text(" (THC is off)\n");
+      post.Text(" ( THC is off )\n")
    end
 end
 
 function ThcOn()
    if(not thcOnCode) then return end
-   if(toolClass == "MarkerTool")  then return end
    
    if(thcstate == 0 and currentZ == cutHeight) then
       thcstate = 1
       post.Text(thcOnCode)
-      post.Text(" (THC is on)\n");
+      post.Text(" ( THC is on )\n")
       return
    end
    
@@ -277,7 +245,7 @@ function OnPenDown()
 
    --if(dist >= refDistance) then
    --   dist = 0
-   --   Reference();
+   --   Reference()
    --end
    
    --post.ModalText (" G00")
@@ -290,11 +258,11 @@ function OnPenDown()
    --   post.Eol()
    --end
    
-   post.Text ("\n M64 P1")
-   post.Text(" (ARC is on)\n");
-
---CONSIDER ADDING M66 (WAIT FOR ARC OK)
-
+   post.Text(" ( Zero Z height )\n")   
+   post.Text ("\n o111 call [#5422]\n")    
+   
+   post.Text(" ( Turn ARC on )\n")   
+   post.Text ("\n o110 call \n") 
    
    if (pierceDelay > 0) then
       post.Text (" G04 P")
@@ -333,10 +301,10 @@ end
 function OnPenUp()
 
       post.Text(thcOffCode)
-      post.Text(" (THC is off)\n");
+      post.Text(" (THC is off)\n")
 
       post.Text (" M65 P1")
-      post.Text(" (ARC is off)\n");
+      post.Text(" ( ARC is off )\n")
       
    if (endDelay > 0) then
       post.Text (" G04 P")
@@ -361,7 +329,7 @@ end
 
 
 function OnNewPart()
-   post.Text(" ( Part: ",partName," )\n");
+   post.Text(" ( Part: ",partName," )\n")
 end
 
 function OnToolChange()
@@ -406,11 +374,6 @@ function OnToolChange()
 	end
 
 
-	if(scriberAxis and scriberAxis == currentZAxis) then
-		endZ = safeZ
-		OnRapid()
-		currentZAxis = "Z"
-	end
 	
 	--if(dthcOff == 0) then
 	--	post.Text (" S999 \n")
@@ -457,7 +420,7 @@ function OnToolChange()
 	offY = 0
 	offZ = 0
 	post.Text (" M00\n")
-	post.Text (" (Check the settings, then press CYCLE START to continue)\n")
+	post.Text (" (Check the Plasma Power Unit settings, then remove PAUSE to continue)\n")
 
 end --end for toolchangefunction
 
