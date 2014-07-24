@@ -34,6 +34,16 @@ float voltageERR = 0.0;
 boolean voltageUpdated = 0;
 unsigned int junkCounter = 0;
 
+
+int rampMin = 230;
+int rampMax = 1830;
+int rampVel = 1830;
+int rampOCR = 1830;
+int rampDeltaErr = 0;
+int rampErrDir = 0;
+int rampMotorDir = 0;
+
+
 //Only called upon startup
 void setup()
 {
@@ -163,12 +173,24 @@ ISR(INT7_vect)
 	temp = PINE & _BV(PINE7);
 		
 	if (temp != 0)
+        {
 		thcOn = 1;
+
+                //sets the start speed for the ramp
+                OCR5A = 0x726; //E6=230//398=920//730=1840 is 115uS with no prescaling (top)
+	        OCR5B = 0x393;
+                rampOCR = 1830;
+                
+        }
 	else
 	{
 		thcOn = 0;
 		currPosSP = currPosIN;
 		currPosACT = currPosIN;
+
+                //bypasses the ramp to pass pulses through
+                OCR5A = 0xE6; //E6=230//398=920//730=1840 is 115uS with no prescaling (top)
+	        OCR5B = 0x73;
 	}
 }
 
@@ -192,20 +214,87 @@ ISR(TIMER5_OVF_vect )
 		currPosACT++;
 	
 	//see if there are more pulses to be delivered
-	if (currPosACT > currPosSP)
-	{
-		PORTL |= _BV(PORTL3);  //set direction for motor
-	}
-	else if ( currPosACT < currPosSP)
-	{
-		PORTL &= ~_BV(PORTL3);	//set direction for motor
-	}
-	else
-	{
-		//no pulses are needed, stop the timer	
-		TCCR5B &= 0xF8;
-		timer5ON = 0;	
-	}
+        if (thcOn)
+        {
+                rampVel = rampMax - rampOCR;
+                
+                if( rampVel == 0 )
+                {
+                        if (currPosACT > currPosSP)
+                	{
+                		PORTL |= _BV(PORTL3);  //set direction for motor
+                	}
+                  	else if ( currPosACT < currPosSP)
+                  	{
+                  		PORTL &= ~_BV(PORTL3);	//set direction for motor
+                  	}
+                        else
+        	        {
+        		    //no pulses are needed, stop the timer	
+        		    TCCR5B &= 0xF8;
+        		    timer5ON = 0;	
+        	        } 
+                }                
+                else if( temp == 0 )
+                {
+                   if( currPosSP > ( currPosAct + rampVel ))
+                   {
+                      rampOCR--; //Speed up
+                      if (rampOCR < rampMin)
+                        rampOCR = rampMin;
+                        
+                      OCR5A = rampOCR;
+                      OCR5B = rampOCR/2;
+                   }
+                   else if( currPosSP <= ( currPosAct + rampVel ))
+                   {
+                      rampOCR++; //Slow down
+                      if (rampOCR < rampMin)
+                        rampOCR = rampMin;
+                        
+                      OCR5A = rampOCR;
+                      OCR5B = rampOCR/2;
+                   }
+                }
+                else if( temp != 0 )
+                {
+                   if( currPosSP < ( currPosAct - rampVel ))
+                   {
+                      rampOCR--; //Speed up
+                      if (rampOCR < rampMin)
+                        rampOCR = rampMin;
+                        
+                      OCR5A = rampOCR;
+                      OCR5B = rampOCR/2;
+                   }
+                   else if( currPosSP >= ( currPosAct + rampVel ))
+                   {
+                      rampOCR++; //Slow down
+                      if (rampOCR < rampMin)
+                        rampOCR = rampMin;
+                        
+                      OCR5A = rampOCR;
+                      OCR5B = rampOCR/2;
+                   }
+                }                         
+        }
+        else
+        {                
+        	if (currPosACT > currPosSP)
+        	{
+        		PORTL |= _BV(PORTL3);  //set direction for motor
+        	}
+        	else if ( currPosACT < currPosSP)
+        	{
+        		PORTL &= ~_BV(PORTL3);	//set direction for motor
+        	}
+        	else
+        	{
+        		//no pulses are needed, stop the timer	
+        		TCCR5B &= 0xF8;
+        		timer5ON = 0;	
+        	}
+        }
 }
 
 //Calculates the voltage feedback
@@ -275,6 +364,7 @@ void loop()
 		}
 	}
 	
+        //LED for troubleshooting
         if( thcOn )
           PORTB |= _BV(7);
         else
