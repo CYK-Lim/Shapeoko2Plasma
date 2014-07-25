@@ -8,10 +8,12 @@ loadusr -Wn powermax ./powermaxSerial.py
 #newsig CurrentSP float
 #sets CurrentSP 0.0
 
-net FloatSwitch <= parport.0.pin-13-in           # => or2.1.in1 and2.4.in0 and2.5.in1 and2.6.in1
-net ArcOK motion.digital-in-00 <= parport.0.pin-10-in-not             # => or2.4.in1 xor2.1.in1 oneshot.2.in
-net TurnTorchOn <= motion.digital-out-01          # => xor2.0.in0 and2.8.in0
-net TurnTorchOn => parport.0.pin-01-out          #  0neshot.1.in not.2.in
+net FloatSwitch <= parport.0.pin-13-in 
+net probe parport.0.pin-13-in-not => motion.probe-input
+     
+net ArcOK motion.digital-in-00 <= parport.0.pin-10-in-not            
+net TurnTorchOn <= motion.digital-out-01         
+net TurnTorchOn => parport.0.pin-01-out         
 net THCOn <= motion.digital-out-00
 net THCOn => parport.0.pin-17-out
 

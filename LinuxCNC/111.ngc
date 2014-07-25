@@ -1,0 +1,20 @@
+o111 sub
+	( record current position )
+	( #5422 ) 
+	( Probe to Z-10 at F25 [Uses machine units, I work in mm, this is meant to be slow!] )
+	G38.2 Z-10 f25
+	( Set Z0 at point where probe triggers )
+	G92 Z0.0	
+	( Rapid up to previously stored coordinates )	
+	G00 Z[#1]
+	
+	
+	
+	
+
+
+	( Set Z0 at point where probe triggers )
+	( G10 L20 P0 Z0 )
+	( Rapid up to Z10 above the material )
+	( G0 Z10 )
+o111 endsub
