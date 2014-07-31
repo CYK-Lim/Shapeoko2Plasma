@@ -7,6 +7,7 @@ loadrt flipflop count=2
 loadrt not count=4
 loadrt or2 count=2
 loadrt debounce cfg=2,1
+loadrt and2 count=2
 
 addf flipflop.0 base-thread
 addf flipflop.1 base-thread
@@ -18,9 +19,22 @@ addf or2.0 base-thread
 addf or2.1 base-thread
 addf debounce.0 base-thread
 addf debounce.1 base-thread
+addf and2.0 base-thread
+addf and2.1 base-thread
 setp debounce.0.delay 1
 setp debounce.1.delay 50
 
+#this and2 is to be sure the torch shuts off in case the program stops
+
+net IsRunning halui.program.is-running and2.1.in0
+net TorchOnDigOut motion.digital-out-01 and2.1.in1
+
+net ArcOK motion.digital-in-00 <= parport.0.pin-10-in-not 
+
+# this and2 is to only allow THC if the arc is ok
+ 
+net ArcOK and2.0.in0
+net THCOnDigOut motion.digital-out-00 and2.0.in1
 
 # If either mothion is disabled or the Digital Out is False, the Flip Flop
 # out is false and is only true after the rising edge of the debouce output
@@ -28,7 +42,7 @@ setp debounce.1.delay 50
 
 net MotionEnabled not.0.in motion.motion-enabled
 net Or0In0 or2.0.in0 not.0.out
-net TorchOnDigOut motion.digital-out-01 not.2.in debounce.0.0.in
+net ProgAndTorch and2.1.out not.2.in debounce.0.0.in
 net Or0In1 or2.0.in1 not.2.out
 setp flipflop.0.data True
 net TorchClkIn debounce.0.0.out flipflop.0.clk 
@@ -42,7 +56,7 @@ net TurnTorchOn => parport.0.pin-01-out
 
 net MotionEnabled not.1.in
 net Or1In0 or2.1.in0 not.1.out
-net THCOnDigOut motion.digital-out-00 not.3.in debounce.0.1.in
+net THCandARCok and2.0.out not.3.in debounce.0.1.in
 net Or1In1 or2.1.in1 not.3.out
 setp flipflop.1.data True
 net THCclockIn debounce.0.1.out flipflop.1.clk
@@ -55,12 +69,4 @@ net FloatSwitch <= parport.0.pin-13-in
 net ProbeDebnceIn parport.0.pin-13-in-not debounce.1.0.in
 # net probe parport.0.pin-13-in-not => motion.probe-input
 net ProbeDebnceOut debounce.1.0.out motion.probe-input
-
-net ArcOK motion.digital-in-00 <= parport.0.pin-10-in-not  
-
-
-        
-
-
-
 
