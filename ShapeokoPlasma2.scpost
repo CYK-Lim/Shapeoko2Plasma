@@ -32,6 +32,9 @@ thcOffCode = " M65 P0"
 --***           End of settings                ***
 --************************************************
 
+post.ForceExtension("ngc")
+
+
 function OnAbout(event)
    ctrl = event:GetTextCtrl()
    ctrl:AppendText("For LinuxCNC running Hypertherm Powermax with RS485 on \n")
@@ -122,7 +125,7 @@ function OnInit()
    dist = 9999999
    lastz = 0
    thcstate = 1
-   post.Text (" M65 P1")
+   post.Text(" M65 P1")
    post.Text(" (ARC is off)\n")
    ThcOff()
    
@@ -143,9 +146,9 @@ function OnFinish()
    post.Text(thcOffCode)
    post.Text(" ( THC is off )\n")
    --post.Text(" M22 \n")
-   post.Text (" M65 P1 ")
+   post.Text(" M65 P1 ")
    post.Text(" ( ARC is off )\n")
-   post.Text (" M30")
+   post.Text(" M30 \n ")
    --post.Text(" G00 X0 Y0\n")
 end
 
