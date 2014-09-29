@@ -1,0 +1,409 @@
+[Tool0]
+Type=PlasmaTool
+Name=Plasma, 1.143 mm kerf
+Comment=
+Tool\ number=1
+Kerf\ width=1.143
+Plunge\ rate=1524
+Pierce\ delay=0
+Pause\ at\ end\ of\ cut=0
+Wiggle\ length=0.254
+Pierce\ height=2.286
+Cut\ height=1.524
+Pierce\ type=2
+Feed\ rate=3810
+[Tool0/Custom]
+Preset\ current=40
+Preset\ Air\ Pressure=85
+Preset\ volts=49
+DTHC\ delay\ -sec=0
+Tip\ Size\ -Amps=45
+NO\ DTHC\ -\ 0=1
+[Tool1]
+Type=PlasmaTool
+Name=Plasma, 0.889 mm kerf
+Comment=
+Tool\ number=2
+Kerf\ width=0.889
+Plunge\ rate=1524
+Pierce\ delay=0
+Pause\ at\ end\ of\ cut=0
+Wiggle\ length=10
+Pierce\ height=2.032
+Cut\ height=0.508
+Pierce\ type=0
+Feed\ rate=8890
+[Tool1/Custom]
+Preset\ current=40
+Preset\ Air\ Pressure=85
+Preset\ volts=49
+DTHC\ delay\ -sec=0
+Tip\ Size\ -Amps=45
+NO\ DTHC\ -\ 0=1
+[Tool2]
+Type=PlasmaTool
+Name=Plasma, 1.372 mm kerf
+Comment=
+Tool\ number=3
+Kerf\ width=1.372
+Plunge\ rate=1524
+Pierce\ delay=0
+Pause\ at\ end\ of\ cut=0
+Wiggle\ length=10
+Pierce\ height=2.032
+Cut\ height=0.508
+Pierce\ type=0
+Feed\ rate=8890
+[Tool2/Custom]
+Preset\ current=40
+Preset\ Air\ Pressure=85
+Preset\ volts=49
+DTHC\ delay\ -sec=0
+Tip\ Size\ -Amps=45
+NO\ DTHC\ -\ 0=1
+[Tool3]
+Type=PlasmaTool
+Name=Plasma, 1.372 mm kerf
+Comment=
+Tool\ number=4
+Kerf\ width=1.372
+Plunge\ rate=1524
+Pierce\ delay=0
+Pause\ at\ end\ of\ cut=0
+Wiggle\ length=10
+Pierce\ height=2.032
+Cut\ height=0.508
+Pierce\ type=0
+Feed\ rate=8890
+[Tool3/Custom]
+Preset\ current=40
+Preset\ Air\ Pressure=85
+Preset\ volts=49
+DTHC\ delay\ -sec=0
+Tip\ Size\ -Amps=45
+NO\ DTHC\ -\ 0=1
+[Tool4]
+Type=PlasmaTool
+Name=Plasma, 1.397 mm kerf
+Comment=
+Tool\ number=5
+Kerf\ width=1.397
+Plunge\ rate=1524
+Pierce\ delay=0
+Pause\ at\ end\ of\ cut=0
+Wiggle\ length=10
+Pierce\ height=3.81
+Cut\ height=1.524
+Pierce\ type=0
+Feed\ rate=5715
+[Tool4/Custom]
+Preset\ current=40
+Preset\ Air\ Pressure=85
+Preset\ volts=49
+DTHC\ delay\ -sec=0
+Tip\ Size\ -Amps=45
+NO\ DTHC\ -\ 0=1
+[Tool5]
+Type=PlasmaTool
+Name=Plasma, 1.397 mm kerf
+Comment=
+Tool\ number=6
+Kerf\ width=1.397
+Plunge\ rate=1524
+Pierce\ delay=0
+Pause\ at\ end\ of\ cut=0
+Wiggle\ length=10
+Pierce\ height=3.81
+Cut\ height=1.524
+Pierce\ type=0
+Feed\ rate=4826
+[Tool5/Custom]
+Preset\ current=40
+Preset\ Air\ Pressure=85
+Preset\ volts=49
+DTHC\ delay\ -sec=0
+Tip\ Size\ -Amps=45
+NO\ DTHC\ -\ 0=1
+[Tool6]
+Type=PlasmaTool
+Name=Plasma, 0.7 mm kerf
+Comment=
+Tool\ number=7
+Kerf\ width=0.7
+Plunge\ rate=1524
+Pierce\ delay=0
+Pause\ at\ end\ of\ cut=0
+Wiggle\ length=10
+Pierce\ height=2.032
+Cut\ height=0.45
+Pierce\ type=0
+Feed\ rate=500
+[Tool6/Custom]
+Preset\ current=20
+Preset\ Air\ Pressure=65
+Preset\ volts=80
+DTHC\ delay\ -sec=0
+Tip\ Size\ -Amps=45
+NO\ DTHC\ -\ 0=1
+[Tool7]
+Type=PlasmaTool
+Name=Plasma, 1.651 mm kerf
+Comment=
+Tool\ number=8
+Kerf\ width=1.651
+Plunge\ rate=1524
+Pierce\ delay=0.5
+Pause\ at\ end\ of\ cut=0
+Wiggle\ length=10
+Pierce\ height=3.81
+Cut\ height=1.524
+Pierce\ type=0
+Feed\ rate=1778
+[Tool7/Custom]
+Preset\ current=40
+Preset\ Air\ Pressure=85
+Preset\ volts=49
+DTHC\ delay\ -sec=0
+Tip\ Size\ -Amps=45
+NO\ DTHC\ -\ 0=1
+[Tool8]
+Type=PlasmaTool
+Name=Plasma, 1.676 mm kerf
+Comment=
+Tool\ number=9
+Kerf\ width=1.676
+Plunge\ rate=1524
+Pierce\ delay=0.6
+Pause\ at\ end\ of\ cut=0
+Wiggle\ length=0.889
+Pierce\ height=3.81
+Cut\ height=1.524
+Pierce\ type=2
+Feed\ rate=1219.200000000000045
+[Tool8/Custom]
+Preset\ current=40
+Preset\ Air\ Pressure=85
+Preset\ volts=49
+DTHC\ delay\ -sec=0
+Tip\ Size\ -Amps=45
+NO\ DTHC\ -\ 0=1
+[Tool9]
+Type=PlasmaTool
+Name=Plasma, 1.575 mm kerf
+Comment=
+Tool\ number=10
+Kerf\ width=1.575
+Plunge\ rate=1524
+Pierce\ delay=0
+Pause\ at\ end\ of\ cut=0
+Wiggle\ length=10
+Pierce\ height=3.81
+Cut\ height=1.524
+Pierce\ type=0
+Feed\ rate=6604
+[Tool9/Custom]
+Preset\ current=40
+Preset\ Air\ Pressure=85
+Preset\ volts=49
+DTHC\ delay\ -sec=0
+Tip\ Size\ -Amps=45
+NO\ DTHC\ -\ 0=1
+[Tool10]
+Type=PlasmaTool
+Name=Plasma, 1.651 mm kerf
+Comment=
+Tool\ number=11
+Kerf\ width=1.651
+Plunge\ rate=1524
+Pierce\ delay=0
+Pause\ at\ end\ of\ cut=0
+Wiggle\ length=10
+Pierce\ height=3.81
+Cut\ height=1.524
+Pierce\ type=0
+Feed\ rate=4826
+[Tool10/Custom]
+Preset\ current=40
+Preset\ Air\ Pressure=85
+Preset\ volts=49
+DTHC\ delay\ -sec=0
+Tip\ Size\ -Amps=45
+NO\ DTHC\ -\ 0=1
+[Tool11]
+Type=PlasmaTool
+Name=Plasma, 0.4 mm kerf
+Comment=
+Tool\ number=12
+Kerf\ width=0.4
+Plunge\ rate=1524
+Pierce\ delay=0.5
+Pause\ at\ end\ of\ cut=1
+Wiggle\ length=10
+Pierce\ height=3.81
+Cut\ height=1.5
+Pierce\ type=0
+Feed\ rate=2550
+[Tool11/Custom]
+Preset\ current=65
+Preset\ Air\ Pressure=75
+Preset\ volts=127
+DTHC\ delay\ -sec=0
+Tip\ Size\ -Amps=65
+NO\ DTHC\ -\ 0=1
+[Tool12]
+Type=PlasmaTool
+Name=Plasma, 2.235 mm kerf
+Comment=
+Tool\ number=13
+Kerf\ width=2.235
+Plunge\ rate=1524
+Pierce\ delay=1.2
+Pause\ at\ end\ of\ cut=1
+Wiggle\ length=1.27
+Pierce\ height=4.572
+Cut\ height=1.524
+Pierce\ type=2
+Feed\ rate=762
+[Tool12/Custom]
+Preset\ current=65
+Preset\ Air\ Pressure=75
+Preset\ volts=135
+DTHC\ delay\ -sec=0
+Tip\ Size\ -Amps=65
+NO\ DTHC\ -\ 0=1
+[Tool13]
+Type=PlasmaTool
+Name=Plasma, 1.143 mm kerf
+Comment=
+Tool\ number=14
+Kerf\ width=1.143
+Plunge\ rate=1524
+Pierce\ delay=0.4
+Pause\ at\ end\ of\ cut=1
+Wiggle\ length=0.889
+Pierce\ height=2.286
+Cut\ height=1.524
+Pierce\ type=2
+Feed\ rate=3810
+[Tool13/Custom]
+Preset\ current=40
+Preset\ Air\ Pressure=75
+Preset\ volts=75
+DTHC\ delay\ -sec=0
+Tip\ Size\ -Amps=45
+NO\ DTHC\ -\ 0=1
+[Tool14]
+Type=PlasmaTool
+Name=Plasma, 0.889 mm kerf
+Comment=
+Tool\ number=36
+Kerf\ width=0.889
+Plunge\ rate=3810
+Pierce\ delay=0.5
+Pause\ at\ end\ of\ cut=0.5
+Wiggle\ length=10
+Pierce\ height=3.81
+Cut\ height=1.524
+Pierce\ type=0
+Feed\ rate=4572
+[Tool14/Custom]
+Preset\ current=40
+Preset\ Air\ Pressure=85
+Preset\ volts=49
+DTHC\ delay\ -sec=0
+Tip\ Size\ -Amps=45
+NO\ DTHC\ -\ 0=1
+[Tool15]
+Type=MarkerTool
+Name=Plate marker
+Comment=
+Tool\ number=100
+Diameter=0.025
+Plunge\ rate=3810
+Start\ delay=0.5
+Pause\ at\ end\ of\ cut=0.5
+Wiggle\ length=10
+Pierce\ height=22.859999999999999
+Cut\ height=22.859999999999999
+Pierce\ type=0
+Feed\ rate=2540
+[Tool16]
+Type=CodeTool
+Name=Arc Off
+Comment=
+Tool\ number=268435456
+Code=M65 P1 ( ARC is off )
+[Tool17]
+Type=CodeTool
+Name=C1 DTHC-OFF
+Comment=
+Tool\ number=268435457
+Code=S10 (DTHC OFF)
+[Tool18]
+Type=CodeTool
+Name=C10 DTHC-ON I=60%
+Comment=
+Tool\ number=268435467
+Code=S26 (DTHC-ON I=60%)
+[Tool19]
+Type=CodeTool
+Name=C11 DTHC-ON I=50%
+Comment=
+Tool\ number=268435468
+Code=S25 (DTHC-ON I=50%)
+[Tool20]
+Type=CodeTool
+Name=C2 DTHC=ON
+Comment=
+Tool\ number=268435458
+Code=S20 (DTHCON)
+[Tool21]
+Type=CodeTool
+Name=C3 DTHC-OFF I=90%
+Comment=
+Tool\ number=268435459
+Code=S129 (DTHC-OFRF I=90%)
+[Tool22]
+Type=CodeTool
+Name=C4 DTHC-OFF I=80%
+Comment=
+Tool\ number=268435460
+Code=S18 (DTHC-OFF I=80%)
+[Tool23]
+Type=CodeTool
+Name=C5 DTHC-OFF I=70%
+Comment=
+Tool\ number=268435461
+Code=S17 (DTHC-OFF I=70%)
+[Tool24]
+Type=CodeTool
+Name=C6 DTHC-OFF I=60%
+Comment=
+Tool\ number=268435462
+Code=S16 (DTHC-OFF I=60%)
+[Tool25]
+Type=CodeTool
+Name=C7 DTHC-OFF I=50%
+Comment=
+Tool\ number=268435463
+Code=S15 (DTHC-OFF I=50%)
+[Tool26]
+Type=CodeTool
+Name=C7 DTHC-ON I=90%
+Comment=
+Tool\ number=268435464
+Code=S29 (DTHC-ON I=90%)
+[Tool27]
+Type=CodeTool
+Name=C8 DTHC-ON I=80%
+Comment=
+Tool\ number=268435465
+Code=S28 (DTHC-ON I=80%)
+[Tool28]
+Type=CodeTool
+Name=THC Off
+Comment=
+Tool\ number=268435466
+Code=M65 P0 (THC is OFF)
+[pathRules]
+GlobalRule=-1
