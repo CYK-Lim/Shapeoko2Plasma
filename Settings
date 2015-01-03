@@ -1,8 +1,9 @@
 
 
 Steel
-.25" thick A36, 65A, 75PSI, feed 1530 mm/min, 6mm overcut, arc off 1mm before start, Kerf 0.4mm (new consumables), 5mm arc lead in, reverse cut direction 
+.25" thick A36, 65A, 75PSI, feed 1530 mm/min, 6mm overcut, arc off 1mm before start, Kerf 0.4mm (new consumables), 5mm arc lead in (also did a 9mm perpendicular lead in with 1s pierce delay and 5mm wiggle [worked good on inside radius, not as good on outside radius, maybe try decreasing overcut on outside and not doing an action point]), reverse cut direction, this was for small ish circles
 
+.50" thick A36, 65A, 75PSI, feed 540 mm/min, 6mm overcut, arc off 0.5mm before start (good on inside cuts, too much on outside cuts), Kerf 0.6mm (lightly used consumables), 1.2s pierce and 1mm wiggle, 7mm arc lead in, 5mm perpedicular out, reverse cut direction, this was for medium sized circles
 
 
 Aluminum
