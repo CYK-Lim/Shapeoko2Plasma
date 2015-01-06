@@ -311,6 +311,36 @@
 				<format>"4d"</format>
 				<width>4</width>
 			</number>
+		<tablerow/>
+			<label>
+				<text>" "</text>
+				<font>("Arial",12)</font>
+			</label>
+			<label>
+				<text>"X-Slope "</text>
+				<font>("Arial",12)</font>
+			</label>
+			<number>
+				<halpin>"XSlope"</halpin>
+				<font>("Arial",12)</font>
+				<format>"+4.4f"</format>
+				<width>8</width>
+			</number>
+		<tablerow/>
+			<label>
+				<text>" "</text>
+				<font>("Arial",12)</font>
+			</label>
+			<label>
+				<text>"Y-Slope "</text>
+				<font>("Arial",12)</font>
+			</label>
+			<number>
+				<halpin>"YSlope"</halpin>
+				<font>("Arial",12)</font>
+				<format>"+4.4f"</format>
+				<width>8</width>
+			</number>
 			
 	<!-- </table> 
 	<table flexible_rows="[2]">	-->

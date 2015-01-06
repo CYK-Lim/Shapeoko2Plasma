@@ -1,0 +1,5 @@
+#!/bin/bash
+xslope=$1
+halcmd sets XSlope $xslope
+exit 0
+

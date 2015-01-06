@@ -422,6 +422,9 @@ function OnToolChange()
 	offX = 0
 	offY = 0
 	offZ = 0
+   post.Text(" M110 P0.0 \n")
+   post.Text(" M111 P0.0 \n")
+   
 	post.Text (" M00\n")
 	post.Text (" (Check the Plasma Power Unit settings, then remove PAUSE to continue)\n")
    
@@ -433,6 +436,9 @@ function OnToolChange()
    --Go to Max X distance
    endX = materialX2
    OnRapid()
+   --Lower to Pierce Height
+   endZ = 2*pierceHeight
+   OnRapid()
    --Touch The Probe
    post.Text(" G38.2 Z-10 F25 \n")
    post.Text(" M110 P[#5063/#5061] \n")
@@ -441,8 +447,13 @@ function OnToolChange()
    post.Number(safeZ, "0.00")
    post.Eol()
    --Go to Max Y distance
+   endX = 0.00
    endY = materialY2
    OnRapid()
+   --Lower to Pierce Height
+   post.Text(" G00 Z")
+   post.Number(2*pierceHeight, "0.00")
+   post.Eol()
    --Touch The Probe
    post.Text(" G38.2 Z-10 F25 \n")
    post.Text(" M111 P[#5063/#5062] \n")

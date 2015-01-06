@@ -8,6 +8,9 @@ net ArcOK => pyvcp.Led-ArcOK
 net TurnTorchOn => pyvcp.Led-TorchOn
 net THCOn => pyvcp.Led-THCOn
 
+net XSlope => tblcompkins.xslope pyvcp.XSlope
+net YSlope => tblcompkins.yslope pyvcp.YSlope
+
 net VoltageSP => pyvcp.Int-VoltageSP
 
 net AirPresSP => pyvcp.Int-AirPresSP powermax.presSP
