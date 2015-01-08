@@ -1,6 +1,4 @@
 /*
- * Sketch1.ino
- *
  * Timer 3 counts the 1Mhz reference from the THCAD (Port E bit 6)
  * Timer 4 counts the signal from the THCAD (Port H bit 7)
  * Timer 5 controls the output to the stepper driver (pins 45-46)
@@ -32,9 +30,9 @@ float deadBand = 0.5;   //*************************************************** fo
 long thcCorrectInc = 1;
 int FreqZero = 1212;
 int incomingByte = 0;
-long currPosACT = 0;
-long currPosIN = 0;
-long currPosSP = 0;
+long currPosACT = 1000000;
+long currPosIN = 1000000;
+long currPosSP = 1000000;
 long thcOffset = 0;
 boolean timer5ON = false;
 int temp = 0;
@@ -132,9 +130,9 @@ void setup()
 	TCNT4 = 0;
 	TCNT5 = 0;
 	
-	currPosACT = 0;
-	currPosIN = 0;
-	currPosSP = 0;
+	currPosACT = 1000000;
+	currPosIN = 1000000;
+	currPosSP = 1000000;
 	timer5ON = 0;
 	
 //NEED TO INITIALIZE THE PINS THAT ARE INTERRUPT DRIVEN
@@ -222,7 +220,7 @@ ISR(TIMER5_OVF_vect )
 		currPosACT++;
 
        // check if we have arrived at the SP and if we are going slow enough to stop
-       if( currPosACT == currPosSP && stepIndex <= 1)
+       if( currPosACT == currPosSP ) //&& stepIndex <= 1)
         {
             //no pulses are needed, stop the timer	
  	    TCCR5B &= 0xF8;
@@ -230,7 +228,7 @@ ISR(TIMER5_OVF_vect )
             stepIndex = 0;
  	 
         }                
-        else if( temp == 0 ) //are we moving up?
+        else if( temp == 0 && currPosSP > currPosACT ) // if we are moving up and we should be
         {
            if( currPosSP > ( currPosACT + stepIndex )) //See if we have time to continue to speed up
            {
@@ -247,7 +245,8 @@ ISR(TIMER5_OVF_vect )
            }
            else if( currPosSP <= ( currPosACT + stepIndex  )) //Do we have to start slowing down
            {
-              stepIndex--; //Slow down
+              if (stepIndex>0)
+                  stepIndex--; //Slow down
 
               newOCR = pgm_read_word_near(stepToOCR + stepIndex); //newOCR = stepToOCR[stepIndex];
                 
@@ -255,7 +254,7 @@ ISR(TIMER5_OVF_vect )
               OCR5B = newOCR/2;
            }
         }
-        else if( temp != 0 ) //are we moving down?
+        else if( temp != 0 && currPosSP < currPosACT) //if we are moving down and we should be
         {
            if( currPosSP < ( currPosACT - stepIndex  )) //See if we have time to continue to speed up
            {
@@ -271,7 +270,8 @@ ISR(TIMER5_OVF_vect )
            }
            else if( currPosSP >= ( currPosACT - stepIndex  )) //Do we have to start slowing down
            {
-              stepIndex--; //Slow down
+              if (stepIndex>0)
+                  stepIndex--; //Slow down 
 
               newOCR = pgm_read_word_near(stepToOCR + stepIndex); //newOCR = stepToOCR[stepIndex];
                 
@@ -279,6 +279,21 @@ ISR(TIMER5_OVF_vect )
               OCR5B = newOCR/2;
            }
         } 
+        else
+        {
+          if (stepIndex>0) //are we ready to stop?
+          {
+                stepIndex--; //Slow down
+          }
+          else if (stepIndex == 0 )
+          {
+            TCCR5B &= 0xF8;
+ 	    timer5ON = 0;
+            stepIndex = 0;
+          }
+        }
+          
+                
 
 
 
@@ -478,11 +493,14 @@ void loop()
           PORTB &= ~_BV(7);
          
          
-        //Serial.print(currPosSP);
-	//Serial.print(" ");
-	//Serial.print(currPosACT);
-        //Serial.print(" ");  
-        //Serial.println(stepIndex);
+      /*  Serial.print(currPosSP);
+	Serial.print(" ");
+	Serial.print(currPosACT);
+        Serial.print(" ");  
+        Serial.print(timer5ON);
+        Serial.print(" "); 
+        Serial.println(stepIndex);
+        */
           
 	//debugJunk();	  //*************************************************** for troubleshooting ***********************************************	
 }
