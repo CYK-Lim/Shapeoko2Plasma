@@ -64,8 +64,8 @@ void setup()
         
 	DDRL |= _BV(DDL4) | _BV(DDL3); //set them as outputs  
 	
-	//Serial.begin(115200);  //*************************************************** for troubleshooting ***********************************************
-        //Serial.println("Serial Started");   //*************************************************** for troubleshooting ***********************************************
+	Serial.begin(115200);  //*************************************************** for troubleshooting ***********************************************
+        Serial.println("Serial Started");   //*************************************************** for troubleshooting ***********************************************
 		
 //////// TIMER 3 ///////// TIMER 3 ////////
 	  
@@ -279,121 +279,19 @@ ISR(TIMER5_OVF_vect )
               OCR5B = newOCR/2;
            }
         } 
-        else
+        else //Something went wrong or we are going the wrong way
         {
           if (stepIndex>0) //are we ready to stop?
           {
                 stepIndex--; //Slow down
           }
-          else if (stepIndex == 0 )
+          else if (stepIndex == 0 )//Stop this ship
           {
             TCCR5B &= 0xF8;
  	    timer5ON = 0;
             stepIndex = 0;
           }
         }
-          
-                
-
-
-
-
-/*
-	
-	//see if there are more pulses to be delivered
-        if (thcOn || returnToCmdPos )
-        {
-                //rampVel = rampMax - rampOCR;
-                
-                if( stepIndex == 0 )
-                {
-       		    //no pulses are needed, stop the timer	
-       		    TCCR5B &= 0xF8;
-       		    timer5ON = 0;
-       
-                    if (returnToCmdPos == 1 && currPosACT == currPosSP )
-                    {
-                        thcOn = 0;
-                        returnToCmdPos = 0;
-                        //bypasses the ramp to pass pulses through
-                        OCR5A = 0xE6; //E6=230//398=920//730=1840 is 115uS with no prescaling (top)
-                        OCR5B = 0x73;
-                    }
-                      	 
-                }                
-                else if( temp == 0 )
-                {
-                   if( currPosSP > ( currPosACT + stepIndex )) //rampVel/rampAccelInc ))
-                   {
-                      stepIndex++; //Speed up
-                      
-                      if( stepIndex > stepIndexMax )
-                        stepIndex = stepIndexMax;
-                      
-                      //newOCR = stepToOCR[stepIndex];
-                      newOCR = pgm_read_word_near(stepToOCR + stepIndex);
-                        
-                      OCR5A = newOCR;
-                      OCR5B = newOCR/2;
-                   }
-                   else if( currPosSP <= ( currPosACT + stepIndex  ))
-                   {
-                      stepIndex--; //rampOCR += rampAccelInc; //Slow down
-
-                      newOCR = pgm_read_word_near(stepToOCR + stepIndex); //newOCR = stepToOCR[stepIndex];
-                        
-                      OCR5A = newOCR;
-                      OCR5B = newOCR/2;
-                   }
-                }
-                else if( temp != 0 )
-                {
-                   if( currPosSP < ( currPosACT - stepIndex  ))
-                   {
-                      stepIndex++; //Speed up
-                      
-                      if( stepIndex > stepIndexMax )
-                        stepIndex = stepIndexMax;
-                      
-                      newOCR = pgm_read_word_near(stepToOCR + stepIndex); //newOCR = stepToOCR[stepIndex];
-                        
-                      OCR5A = newOCR;
-                      OCR5B = newOCR/2;
-                   }
-                   else if( currPosSP >= ( currPosACT - stepIndex  ))
-                   {
-                      stepIndex--; //rampOCR += rampAccelInc; //Slow down
-
-                      newOCR = pgm_read_word_near(stepToOCR + stepIndex); //newOCR = stepToOCR[stepIndex];
-                        
-                      OCR5A = newOCR;
-                      OCR5B = newOCR/2;
-                   }
-                }                         
-        }
-        else //this is for THC not on and not ramping back to 
-        {                
-        	if (currPosACT > currPosSP)
-        	{
-        		PORTL |= _BV(PORTL3);  //set direction for motor
-        	}
-        	else if ( currPosACT < currPosSP)
-        	{
-        		PORTL &= ~_BV(PORTL3);	//set direction for motor
-        	}
-        	else
-        	{
-        		//no pulses are needed, stop the timer	
-        		TCCR5B &= 0xF8;
-        		timer5ON = 0;	
-        	}
-        }
-        
-        
-        
-        
-*/
-
 }
 
 //Calculates the voltage feedback
@@ -440,11 +338,11 @@ void loop()
         		
         		if (voltageACT < (voltageSP-deadBand))
         		{
-        			thcOffset++; // += thcCorrectInc*voltageERR*thcKP;
+        			thcOffset+=100; // += thcCorrectInc*voltageERR*thcKP;
         		}
         		else if (voltageACT > (voltageSP+deadBand))
         		{
-        			thcOffset--;// += thcCorrectInc*voltageERR*thcKP;
+        			thcOffset-=100;// += thcCorrectInc*voltageERR*thcKP;
         		} 
                 }
 	}
@@ -493,22 +391,17 @@ void loop()
           PORTB &= ~_BV(7);
          
          
-      /*  Serial.print(currPosSP);
-	Serial.print(" ");
-	Serial.print(currPosACT);
-        Serial.print(" ");  
-        Serial.print(timer5ON);
-        Serial.print(" "); 
-        Serial.println(stepIndex);
-        */
+
+        
           
-	//debugJunk();	  //*************************************************** for troubleshooting ***********************************************	
+	debugJunk();	  //*************************************************** for troubleshooting ***********************************************	
 }
 
 //Just for debugging
 void debugJunk()
 {
-	junkCounter++;
+  junkCounter++;
+  String message = "                             \n";
 /*	
 	if (Serial.available() )//> 0 && timer5ON == 0)
 	{
@@ -529,9 +422,21 @@ void debugJunk()
 	
 		//Serial.print(temp2,BIN);
 	
-	if (!(junkCounter % 5000))
+	if (!(junkCounter % 2500))
 	{
-		Serial.print(thcOn,BIN);
+           
+  0        1.00   1.21      0
+
+            //Serial.print(message);
+  	  Serial.print(thcOn);
+  	  Serial.print("        ");
+  	  Serial.print(voltageSP);
+          Serial.print("   ");  
+          Serial.print(voltageACT);
+          Serial.print("      "); 
+          Serial.println(thcOffset);
+          
+        /*Serial.print(thcOn,BIN);
 		Serial.print(" ");
 		//Serial.print(returnToCmdPos,BIN);
 		//Serial.print(" ");		
@@ -546,6 +451,7 @@ void debugJunk()
 		Serial.print(currPosACT);
 		Serial.print(" ");
 		Serial.println(stepIndex);
+*/
 	}
 	
 
